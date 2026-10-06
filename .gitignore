@@ -1,0 +1,23 @@
+# Środowisko
+.env
+.env.*
+
+# Node / frontend
+node_modules/
+dist/
+build/
+
+# Python / backend
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# System
+.DS_Store
+Thumbs.db

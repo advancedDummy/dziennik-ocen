@@ -1,0 +1,4 @@
+version: "3.8"
+
+services:
+  # Frontend, backend i baza pojawią się w kolejnych fazach projektu
