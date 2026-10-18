@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Test - Dziennik Ocen</title>
+</head>
+<body>
+
+    <h1>Dziennik Ocen - Szkielet</h1>
+    
+    <!-- Guzik wyzwalający zapytanie -->
+    <button onclick="klik()">Kliknij mnie</button>
+    
+    <!-- Miejsce na komunikat od backendu -->
+    <h2 id="napis"></h2>
+    
+    <!-- Miejsce na komunikat o bazie danych -->
+    <h3 id="baza-napis" ></h3>
+
+    <script>
+        async function klik() {
+            // zapytanie do backendu na port 3000
+            const res = await fetch('http://localhost:3000/ping');
+            const data = await res.json();
+            
+            // komunikat z backendu
+            document.getElementById('napis').innerText = data.wiadomosc;
+            
+            // + status bazy danych
+            document.getElementById('baza-napis').innerText = data.baza;
+        }
+    </script>
+
+</body>
+</html>

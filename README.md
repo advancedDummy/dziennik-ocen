@@ -18,3 +18,4 @@ Aplikacja do prowadzenia dziennika ocen z wykorzystaniem wirtualizacji i kontene
 
 ## Status
 Projekt w fazie początkowej (Zajęcia 1).
+Projekt rozwiniety o szkielet aplikacji - 3 kontenery i prosty test komunikacji.
