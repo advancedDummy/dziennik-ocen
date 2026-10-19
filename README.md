@@ -17,5 +17,4 @@ Aplikacja do prowadzenia dziennika ocen z wykorzystaniem wirtualizacji i kontene
 - Komunikacja HTTP + JSON
 
 ## Status
-Projekt w fazie początkowej (Zajęcia 1).
 Projekt rozwiniety o szkielet aplikacji - 3 kontenery i prosty test komunikacji.
