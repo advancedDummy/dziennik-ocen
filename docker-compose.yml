@@ -3,9 +3,19 @@ version: '3.8'
 services:
   db:
     image: postgres:15-alpine
+    container_name: dziennik_db
+    env_file:
+      - .env
     environment:
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
+    networks:
+      - app_network
   backend:
     build: ./backend
     ports:
