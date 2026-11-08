@@ -1,30 +1,24 @@
-# --- BIBLIOTEKI FASTAPI ---
-# FastAPI: Główny framework do budowy szybkiego API.
-# HTTPException: Pozwala "rzucać" błędy HTTP (np. 404 Nie znaleziono, 400 Złe żądanie), by odpowiednio poinformować frontend.
-# status: Zawiera stałe z kodami HTTP (np. status.HTTP_200_OK), choć w tym kodzie używamy przeważnie cyfr bezpośrednio.
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException
+# HTTPException - błędy HTTP
 
-# CORSMiddleware: Mechanizm pozwalający przeglądarce (w której działa frontend) na komunikację z backendem 
-# działającym na innym porcie/domenie (tzw. omijanie blokady CORS, która domyślnie blokuje takie strzały ze względów bezpieczeństwa).
 from fastapi.middleware.cors import CORSMiddleware
+# CORSMiddleware zezwala przeglądarce na komunikację z backendem działającym na innym porcie/domenie (domyślnie jest to blokowane)
 
-# --- BIBLIOTEKI PYDANTIC (Do walidacji) ---
-# BaseModel: Klasa bazowa do tworzenia tzw. "schematów" danych. Automatycznie konwertuje JSONy na obiekty Pythona i weryfikuje ich typy.
-# Field: Pozwala nakładać dodatkowe restrykcje na pola (np. minimalna wartość, opisy do dokumentacji).
 from pydantic import BaseModel, Field
+# BaseModel do stworzenia schematów danych (klasy bazowej) i konwertowania JASONów na obiekty pythona i weryfikowania ich typów
+# Field do konkretnej restrykcji ocen (od 1 do 6) 
 
-# --- BIBLIOTEKI BAZY DANYCH ---
-# psycopg2: Najpopularniejszy sterownik pozwalający Pythonowi "rozmawiać" z bazą PostgreSQL.
 import psycopg2
-# RealDictCursor: Domyślnie psycopg2 zwraca wyniki z bazy jako krotki (np. (1, "Jan", "Kowalski")).
-# RealDictCursor zmienia to na słowniki (np. {"id": 1, "imie": "Jan"}), co o wiele łatwiej potem odesłać jako JSON do frontendu.
+# komunikacja z bazą PostgreSQL
+
 from psycopg2.extras import RealDictCursor
+# RealDictCursor do zwracania wyników z bazy jako słownik zamiast krotki
 
-# os: Standardowa biblioteka Pythona do interakcji z systemem operacyjnym. Tutaj używamy jej do czytania zmiennych z pliku .env.
 import os
+# do odczytu sciezki do .env
 
 
-# Inicjalizacja api
+
 app = FastAPI()
 
 # Polityka CORS.
@@ -36,9 +30,7 @@ app.add_middleware(
 )
 
 
-# === FUNKCJE POMOCNICZE ===
-
-# funkcja tworząca połączenie z bazą przy każdym nowym żądaniu (np. nowym GET lub POST)
+# funkcja tworząca połączenie z bazą
 def get_db_connection():
     try:
        
@@ -67,7 +59,7 @@ def health_check():
         conn.close() # Zamykanie połączenie od razu żeby nie zapchać bazy
         return {"status": "ok", "db": "connected"}
     
-    # w przypadku zwrócenia None wystąpi błąd serwera (kod 500)
+    # jesli zwroci None podnosimy kod 500
     raise HTTPException(status_code=500, detail="Database not connected")
 
 
