@@ -2,34 +2,461 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Test - Dziennik Ocen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dziennik Ocen</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --danger: #dc2626;
+            --danger-hover: #b91c1c;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Lista uczniów */
+        .student-list {
+            list-style: none;
+        }
+
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.9rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 0.6rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            background: white;
+        }
+
+        .student-item:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .student-item .name {
+            font-weight: 500;
+        }
+
+        .student-item .id {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        /* Widok szczegółów */
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .grades-table th,
+        .grades-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .grades-table th {
+            background: #f1f5f9;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .grade-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            padding: 0.35rem 0.7rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-hover);
+        }
+
+        /* Formularz dodawania oceny */
+        .form-row {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .form-group label {
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        input, select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            min-width: 140px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .empty {
+            color: var(--muted);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .error {
+            background: #fef2f2;
+            color: #b91c1c;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #fecaca;
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--muted);
+            padding: 2rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <h1>Dziennik Ocen</h1>
+        <span id="status" style="font-size: 0.85rem; opacity: 0.9;">Ładowanie...</span>
+    </header>
 
-    <h1>Dziennik Ocen - Szkielet</h1>
-    
-    <!-- Guzik wyzwalający zapytanie -->
-    <button onclick="klik()">Kliknij mnie</button>
-    
-    <!-- Miejsce na komunikat od backendu -->
-    <h2 id="napis"></h2>
-    
-    <!-- Miejsce na komunikat o bazie danych -->
-    <h3 id="baza-napis" ></h3>
+    <div class="container">
+        <!-- WIDOK 1: Lista uczniów -->
+        <div id="view-list">
+            <div class="card">
+                <h2>Uczniowie</h2>
+                <div id="students-container">
+                    <div class="loading">Ładowanie listy uczniów...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WIDOK 2: Szczegóły ucznia -->
+        <div id="view-detail" class="hidden">
+            <button class="back-btn" onclick="showList()">← Powrót do listy</button>
+
+            <div class="card">
+                <h2 id="student-name">Uczeń</h2>
+                <div id="student-info"></div>
+            </div>
+
+            <div class="card">
+                <h2>Oceny</h2>
+                <div id="grades-container"></div>
+
+                <!-- Formularz dodawania oceny -->
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                    <h3 style="font-size: 1rem; margin-bottom: 0.75rem;">Dodaj ocenę</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Przedmiot</label>
+                            <input type="text" id="new-subject" placeholder="np. Matematyka" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Ocena</label>
+                            <select id="new-grade">
+                                <option value="1">1</option>
+                                <option value="1.5">1.5</option>
+                                <option value="2">2</option>
+                                <option value="2.5">2.5</option>
+                                <option value="3">3</option>
+                                <option value="3.5">3.5</option>
+                                <option value="4">4</option>
+                                <option value="4.5">4.5</option>
+                                <option value="5">5</option>
+                                <option value="5.5">5.5</option>
+                                <option value="6">6</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="addGrade()">Dodaj ocenę</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        async function klik() {
-            // zapytanie do backendu na port 3000
-            const res = await fetch('http://localhost:3000/ping');
-            const data = await res.json();
-            
-            // komunikat z backendu
-            document.getElementById('napis').innerText = data.wiadomosc;
-            
-            // + status bazy danych
-            document.getElementById('baza-napis').innerText = data.baza;
-        }
-    </script>
+        const API = "http://localhost:3000";
+        let currentStudentId = null;
 
+        // ========== POMOCNICZE ==========
+        async function api(path, options = {}) {
+            const res = await fetch(`${API}${path}`, {
+                headers: { "Content-Type": "application/json" },
+                ...options
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.detail || `Błąd ${res.status}`);
+            }
+            if (res.status === 204) return null;
+            return res.json();
+        }
+
+        function showList() {
+            document.getElementById("view-list").classList.remove("hidden");
+            document.getElementById("view-detail").classList.add("hidden");
+            currentStudentId = null;
+            loadStudents();
+        }
+
+        function showDetail() {
+            document.getElementById("view-list").classList.add("hidden");
+            document.getElementById("view-detail").classList.remove("hidden");
+        }
+
+        // ========== LISTA UCZNIÓW ==========
+        async function loadStudents() {
+            const container = document.getElementById("students-container");
+            try {
+                const students = await api("/api/students");
+                if (students.length === 0) {
+                    container.innerHTML = `<div class="empty">Brak uczniów w bazie</div>`;
+                    return;
+                }
+                container.innerHTML = `
+                    <ul class="student-list">
+                        ${students.map(s => `
+                            <li class="student-item" onclick="openStudent(${s.id})">
+                                <span class="name">${s.first_name} ${s.last_name}</span>
+                                <span class="id">#${s.id}</span>
+                            </li>
+                        `).join("")}
+                    </ul>
+                `;
+            } catch (e) {
+                container.innerHTML = `<div class="error">Nie udało się pobrać uczniów: ${e.message}</div>`;
+            }
+        }
+
+        // ========== SZCZEGÓŁY UCZNIA ==========
+        async function openStudent(id) {
+            currentStudentId = id;
+            showDetail();
+            const nameEl = document.getElementById("student-name");
+            const infoEl = document.getElementById("student-info");
+            const gradesEl = document.getElementById("grades-container");
+
+            nameEl.textContent = "Ładowanie...";
+            infoEl.innerHTML = "";
+            gradesEl.innerHTML = `<div class="loading">Ładowanie ocen...</div>`;
+
+            try {
+                const student = await api(`/api/students/${id}`);
+                nameEl.textContent = `${student.first_name} ${student.last_name}`;
+                infoEl.innerHTML = `<p style="color: var(--muted);">ID: ${student.id}</p>`;
+
+                renderGrades(student.grades || []);
+            } catch (e) {
+                nameEl.textContent = "Błąd";
+                gradesEl.innerHTML = `<div class="error">${e.message}</div>`;
+            }
+        }
+
+        function renderGrades(grades) {
+            const container = document.getElementById("grades-container");
+            if (!grades || grades.length === 0) {
+                container.innerHTML = `<div class="empty">Brak ocen</div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <table class="grades-table">
+                    <thead>
+                        <tr>
+                            <th>Przedmiot</th>
+                            <th>Ocena</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${grades.map(g => `
+                            <tr>
+                                <td>${g.subject}</td>
+                                <td><span class="grade-value">${g.grade}</span></td>
+                                <td>
+                                    <button class="btn btn-danger" onclick="deleteGrade(${g.id})">Usuń</button>
+                                </td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // ========== DODAWANIE / USUWANIE OCEN ==========
+        async function addGrade() {
+            const subject = document.getElementById("new-subject").value.trim();
+            const grade = parseFloat(document.getElementById("new-grade").value);
+
+            if (!subject) {
+                alert("Podaj nazwę przedmiotu");
+                return;
+            }
+
+            try {
+                await api("/api/grades", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        student_id: currentStudentId,
+                        subject: subject,
+                        grade: grade
+                    })
+                });
+                document.getElementById("new-subject").value = "";
+                // Odśwież szczegóły
+                openStudent(currentStudentId);
+            } catch (e) {
+                alert("Błąd przy dodawaniu oceny: " + e.message);
+            }
+        }
+
+        async function deleteGrade(gradeId) {
+            if (!confirm("Czy na pewno chcesz usunąć tę ocenę?")) return;
+
+            try {
+                await api(`/api/grades/${gradeId}`, { method: "DELETE" });
+                openStudent(currentStudentId);
+            } catch (e) {
+                alert("Błąd przy usuwaniu: " + e.message);
+            }
+        }
+
+        // ========== START ==========
+        async function init() {
+            const statusEl = document.getElementById("status");
+            try {
+                const health = await api("/health");
+                statusEl.textContent = health.db === "connected" ? "Połączono z bazą" : "Problem z bazą";
+            } catch {
+                statusEl.textContent = "Brak połączenia z backendem";
+            }
+            loadStudents();
+        }
+
+        init();
+    </script>
 </body>
 </html>
